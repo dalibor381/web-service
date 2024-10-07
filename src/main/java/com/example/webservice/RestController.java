@@ -13,52 +13,44 @@ public class RestController {
     @Autowired
     public AtomicInteger counter ;
 
-    public List<User> users = new ArrayList<>();
+    public Map<Integer, User> users = new HashMap<>();
 
     @Autowired
     public User user;
 
-
     @GetMapping("/getAll")
-    public List<User> getAll() {
-
+    public Map<Integer, User> getAll() {
         return users;
     }
 
     //browser url: http://localhost:8080/get?id=1
     @GetMapping("/getById")
-    public Optional<User> getThis(@RequestParam int id) {
-
-        return users.stream()
-                .filter(n -> n.id == id)
-                .findFirst();
+    public User getThis(@RequestParam int id) {
+        return users.get(id);
     }
 
-    //Must call from Postman. Browser will not do POST/PUT:
-    // http://localhost:8080/post?user=Kiki
+    //Must call from Postman. Browser will not do POST/PUT   http://localhost:8080/post?user=Kiki
     @PostMapping("/post")
-    public List<User> postThis(@RequestParam String userName) {
-        user.setId(counter.incrementAndGet());
+    public Map<Integer, User> postThis(@RequestParam String userName) {
+        user = new User();
         user.setName(userName);
-        users.add(user);
+        users.put(counter.incrementAndGet(), user);
 
         return users;
     }
 
     //Must call from Postman. Browser will not do POST/PUT:
     @PutMapping("/put")
-    public List<User> updateThis(@RequestParam int id, String userName) {
-        user.setId(id);
+    public Map<Integer, User> updateThis(@RequestParam int id, String userName) {
         user.setName(userName);
-        users.add(user);
+        users.put(id, user);
 
         return users;
     }
 
     @DeleteMapping("/delete")
-    public List<User> deleteThis(@RequestParam int id) {
+    public Map<Integer, User> deleteThis(@RequestParam int id) {
         users.remove(id);
-        System.out.println(users);
 
         return users;
     }
