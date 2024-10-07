@@ -42,6 +42,7 @@ public class RestController {
     //Must call from Postman. Browser will not do POST/PUT:
     @PutMapping("/put")
     public Map<Integer, User> updateThis(@RequestParam int id, String userName) {
+        user = new User();
         user.setName(userName);
         users.put(id, user);
 
